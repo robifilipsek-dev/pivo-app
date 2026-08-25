@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍻 Pijača s sodelavci</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d97706">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #b45309;
+            --primary-light: #d97706;
+            --accent: #e74c3c;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #fef3c7 0%, #f1f5f9 100%);
+            color: var(--text);
+            margin: 0;
+            padding: 24px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px 20px;
+            max-width: 620px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07), 0 2px 5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #ffffff;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 20px;
+            margin: 0;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.3px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-badge {
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-weight: 700;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+        }
+
+        .event-section {
+            background: linear-gradient(145deg, #fffbeb, #fef3c7);
+            border: 1px solid #f59e0b;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(245,158,11,0.12);
+        }
+
+        .event-section-title {
+            font-size: 12px;
+            color: #b45309;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .event-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .event-input-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            gap: 4px;
+        }
+
+        .event-input-group label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #92400e;
+        }
+
+        .event-input-group input, .event-input-group select {
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 1px solid #f59e0b;
+            font-size: 12px;
+            font-weight: 700;
+            background: #ffffff;
+            color: var(--primary);
+            box-sizing: border-box;
+            width: 100%;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .event-input-group input:focus, .event-input-group select:focus {
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+
+        .event-summary-box {
+            background: #ffffff;
+            border: 1px dashed #f59e0b;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        .btn-3d {
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        .btn-3d:active {
+            transform: translateY(3px) !important;
+        }
+
+        .btn-create-event {
+            background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+            color: white;
+            font-size: 12px;
+            padding: 10px;
+            box-shadow: 0 3px 0 #92400e;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        .btn-create-event:active { box-shadow: 0 1px 0 #92400e; }
+
+        .btn-teams {
+            background: linear-gradient(180deg, #5b63d3 0%, #464eb8 100%);
+            color: white;
+            font-size: 12px;
+            padding: 10px;
+            box-shadow: 0 3px 0 #2f3480;
+            width: 100%;
+            margin-top: 6px;
+        }
+        .btn-teams:active { box-shadow: 0 1px 0 #2f3480; }
+
+        .status-buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-confirm-yes {
+            background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            font-size: 11px;
+            padding: 8px;
+            box-shadow: 0 2px 0 #0f5132;
+        }
+        .btn-confirm-yes:active { box-shadow: 0 0 0 #0f5132; }
+
+        .btn-confirm-no {
+            background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            font-size: 11px;
+            padding: 8px;
+            box-shadow: 0 2px 0 #842029;
+        }
+        .btn-confirm-no:active { box-shadow: 0 0 0 #842029; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        
+        .info-card {
+            background: linear-gradient(180deg, #ffffff 0%, #fdfdfd 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px;
+            height: 95px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            box-sizing: border-box;
+        }
+
+        .info-card.attending {
+            border-color: var(--success);
+            background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .info-card.not-attending {
+            border-color: var(--accent);
+            background: linear-gradient(180deg, #fef2f2 0%, #fee2e2 100%);
+            opacity: 0.8;
+        }
+        
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+        .card-name {
+            font-weight: 800;
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 800;
+            color: white;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .badge-yes { background: var(--success); }
+        .badge-no { background: var(--accent); }
+        .badge-none { background: #94a3b8; }
+        
+        .card-actions-row {
+            display: flex;
+            gap: 4px;
+            margin-top: auto;
+        }
+
+        .vote-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 2px;
+            font-size: 9px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #cbd5e1;
+            flex: 1;
+            text-align: center;
+        }
+        .vote-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 0 #cbd5e1;
+        }
+        .vote-btn.yes-active {
+            background: #dcfce7;
+            border-color: var(--success);
+            color: #15803d;
+        }
+        .vote-btn.no-active {
+            background: #fee2e2;
+            border-color: var(--accent);
+            color: #b91c1c;
+        }
+        
+        .footer-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            border-top: 1px dashed var(--border);
+            padding-top: 12px;
+        }
+        
+        .user-indicator-footer {
+            font-size: 11px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .user-indicator-footer b {
+            color: var(--primary);
+        }
+        .change-user-link {
+            color: #3498db;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 10px;
+        }
+
+        .icon-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 15px;
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .icon-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #cbd5e1;
+        }
+
+        .login-overlay, .modal-overlay {
+            display: flex;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .login-card, .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-content {
+            max-width: 680px;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .login-card h2, .modal-header {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 18px;
+        }
+        .login-card select, .login-card input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin: 15px 0;
+            background: #fafafa;
+            font-weight: 700;
+            color: var(--text);
+            box-sizing: border-box;
+        }
+
+        .modal-header {
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .close-btn { cursor: pointer; color: #aaa; font-size: 18px; }
+        .auth-box { text-align: center; padding: 10px 0; }
+        .auth-box input { width: 70%; padding: 8px; text-align: center; font-size: 13px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; }
+
+        .admin-section { border-top: 1px dashed var(--border); margin-top: 14px; padding-top: 12px; }
+        .admin-section h3 { font-size: 13px; margin: 0 0 8px 0; color: var(--primary); font-weight: 800; }
+        
+        .member-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 8px; }
+        .member-table th, .member-table td { padding: 4px 6px; text-align: left; border-bottom: 1px solid #eaeaea; vertical-align: middle; }
+        .member-table th { background: #fdfaf6; color: var(--primary); font-weight: 800; }
+
+        .config-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+        .config-field label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #555;
+        }
+        .config-field input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 11px;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay" style="display: none;">
+    <div class="login-card">
+        <h2>🍻 Kdo se prijavlja?</h2>
+        <p style="font-size: 12px; color: #666;">Izberi svoje ime za glasovanje:</p>
+        <select id="loginUserSelect"></select>
+        <button class="btn-3d" style="width:100%; padding: 10px; font-size: 13px; background:var(--primary); color:white;" onclick="handleLoginSelection()">Prijava</button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="header">
+        <h1>🍻 Pijača s sodelavci</h1>
+        <div class="header-right">
+            <span id="status" class="status-badge">Nalaganje...</span>
+        </div>
+    </div>
+
+    <div class="event-section">
+        <span class="event-section-title">📅 Izbira termina in lokacije</span>
+        
+        <div class="event-controls">
+            <div class="event-input-group">
+                <label>Datum in ura:</label>
+                <input type="datetime-local" id="eventDateTime" step="600" onchange="updateEventDetails()">
+            </div>
+            <div class="event-input-group">
+                <label>Lokacija:</label>
+                <select id="eventLocationSelect" onchange="updateEventDetails()">
+                    <!-- Dinamično -->
+                </select>
+            </div>
+        </div>
+
+        <div class="event-summary-box" id="eventSummaryDisplay">
+            <span>📍 Izbrano: <b id="summaryText">Ni določeno</b></span>
+        </div>
+
+        <button class="btn-3d btn-create-event" onclick="createNewEventAndNotify()">✨ Ustvari dogodek in obvesti Teams</button>
+        <button class="btn-3d btn-teams" onclick="triggerTeamsNotification()">📢 Pošlji opomnik v Teams</button>
+        
+        <div class="status-buttons-grid">
+            <button class="btn-3d btn-confirm-yes" onclick="triggerFinalDecision(true)">🟢 Gremo (potrdi)</button>
+            <button class="btn-3d btn-confirm-no" onclick="triggerFinalDecision(false)">🔴 Odpovej (ne gremo)</button>
+        </div>
+    </div>
+
+    <div class="grid" id="cards"></div>
+
+    <div class="footer-tools">
+        <div class="user-indicator-footer">
+            <span>Prijavljen: <b id="currentLoggedInUser">-</b></span>
+            <span class="change-user-link" onclick="promptChangeUser()">(Zamenjaj)</span>
+        </div>
+        <div style="display:flex; gap: 6px;">
+            <button class="icon-btn" onclick="fetchData()" title="Osveži">🔄</button>
+            <button class="icon-btn" onclick="openModal()" title="Nastavitve">⚙️</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>⚙️ Nastavitve in Seznam lokacij</span>
+            <span class="close-btn" onclick="closeModal()">✕</span>
+        </div>
+
+        <div id="authView" class="auth-box">
+            <p style="font-size: 12px; color: #555;">Za urejanje vnesi geslo:</p>
+            <input type="password" id="passInput" placeholder="Vnesi geslo" onkeydown="handlePasswordKey(event)">
+            <br>
+            <button class="btn-3d" style="padding: 6px 16px; font-size: 12px; margin-top: 4px; background:var(--primary); color:white;" onclick="checkPassword()">Odkleni</button>
+            <p id="authError" style="color: red; font-size: 11px; display: none; margin-top: 6px;">Napačno geslo!</p>
+        </div>
+
+        <div id="settingsView" style="display: none;">
+            <div class="admin-section" style="border-top: none; padding-top: 0;">
+                <h3>🍻 Poljubno dodajanje in urejanje lokacij</h3>
+                <div style="display:flex; gap:6px; margin-bottom:10px;">
+                    <input type="text" id="newPubName" placeholder="Ime nove lokacije (npr. Kavarna Lajk)" style="flex:1; padding:6px; border:1px solid #ccc; border-radius:6px; font-size:11px;">
+                    <button class="btn-3d" style="padding: 6px 10px; font-size: 11px; background:var(--primary); color:white;" onclick="addPub()">➕ Dodaj lokacijo</button>
+                </div>
+                <div id="pubsListContainer" style="display:flex; flex-direction:column; gap:4px; max-height:120px; overflow-y:auto; margin-bottom:10px;"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3>👥 Urejanje sodelavcev (vrstni red in glasovi)</h3>
+                <div style="overflow-x: auto;">
+                    <table class="member-table">
+                        <thead>
+                            <tr>
+                                <th>Ime</th>
+                                <th style="text-align: right;">Premik / Akcije</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody"></tbody>
+                    </table>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:8px;">
+                    <input type="text" id="newMemberName" placeholder="Ime sodelavca" style="flex:1; padding:6px; border:1px solid #ccc; border-radius:6px; font-size:11px;">
+                    <button class="btn-3d" style="padding: 6px 10px; font-size: 11px; background:var(--primary); color:white;" onclick="addMember()">➕ Dodaj</button>
+                </div>
+                
+                <button class="btn-3d" style="width:100%; margin-top:12px; font-size: 11px; padding: 6px; background:#e2e8f0; color:#334155;" onclick="resetAllVotes()">🔄 Ponastavi vse glasove na 'Ni glasoval'</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>⚙️ Povezave (Google Apps Script / Webhook)</h3>
+                <div class="config-field">
+                    <label>Google Apps Script Web App URL:</label>
+                    <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+                </div>
+                <div class="config-field">
+                    <label>Teams Webhook URL:</label>
+                    <input type="text" id="webhookUrl">
+                </div>
+            </div>
+
+            <button class="btn-3d" style="width:100%; margin-top:10px; font-size: 12px; padding: 8px; background:var(--success); color:white;" onclick="saveConfig()">💾 Shrani spremembe</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let team = ["Fendre", "Filipšek", "Fidler", "Pirnat", "Govedić", "Šetina", "Vrtačnik", "Gračner", "Oprešnik"];
+    let pubs = ["INA", "MEH", "Pri Joži", "Menza", "Gostilna pod gradom"];
+
+    let SCRIPT_URL = localStorage.getItem('beer_SCRIPT_URL_new') || "https://script.google.com/macros/s/AKfycby8jW-iyOdOunh61rRj0Oi3t8Sd5au4iluoFSZ-tjvksXTALwLCIrE3b7KS3DXQbELnZA/exec"; 
+    let WEBHOOK = localStorage.getItem('beer_WEBHOOK_new') || "https://default3caae3ec12124a678d46afe2847c45.a8.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/6fff140a5ebd400ebc814b644d3f723a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VMBZ_lQcmqJTTImvEPcc-5ptsY0ikGtJ2HSTRE6DnTI";
+
+    let votes = {}; 
+    let eventDate = "";
+    let eventLocation = pubs[0];
+    let loggedInUser = "";
+
+    function checkLogin() {
+        const select = document.getElementById('loginUserSelect');
+        select.innerHTML = '';
+        team.forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.innerText = name;
+            select.appendChild(opt);
+        });
+        document.getElementById('loginOverlay').style.display = 'flex';
+    }
+
+    function handleLoginSelection() {
+        const select = document.getElementById('loginUserSelect');
+        loggedInUser = select.value;
+        if (!loggedInUser) return;
+        
+        document.getElementById('currentLoggedInUser').innerText = loggedInUser;
+        document.getElementById('loginOverlay').style.display = 'none';
+        render();
+    }
+
+    function promptChangeUser() {
+        checkLogin();
+    }
+
+    function validateAndRoundTime(inputVal) {
+        if (!inputVal) return "";
+        let valParts = inputVal.split('T');
+        if (valParts.length < 2) return inputVal;
+        let timeParts = valParts[1].split(':');
+        let hours = parseInt(timeParts[0], 10);
+        let minutes = parseInt(timeParts[1], 10);
+        
+        let roundedMins = Math.round(minutes / 10) * 10;
+        if (roundedMins === 60) {
+            roundedMins = 0;
+            hours = (hours + 1) % 24;
+        }
+        
+        let hh = String(hours).padStart(2, '0');
+        let mm = String(roundedMins).padStart(2, '0');
+        return `${valParts[0]}T${hh}:${mm}`;
+    }
+
+    function fetchData() {
+        document.getElementById('status').innerText = '⏳ Nalaganje...';
+
+        if (!SCRIPT_URL || SCRIPT_URL.includes("VNESI_SVOJ")) {
+            loadDefaultDataState('⚠️ Ni nastavljen URL');
+            return;
+        }
+
+        fetch(SCRIPT_URL, {
+            method: 'GET',
+            redirect: 'follow'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Napaka");
+            return res.json();
+        })
+        .then(data => {
+            if (!data || Object.keys(data).length === 0) {
+                loadDefaultDataState('✅ Sinhronizirano');
+                return;
+            }
+            votes = data.votes || {};
+            eventDate = data.eventDate || "";
+            eventLocation = data.eventLocation || pubs[0];
+            if (data.team && Array.isArray(data.team)) team = data.team;
+            if (data.pubs && Array.isArray(data.pubs)) pubs = data.pubs;
+            
+            finalizeDataLoad('✅ Sinhronizirano');
+        })
+        .catch(() => {
+            loadDefaultDataState('⚠️ Lokalni način');
+        });
+    }
+
+    function loadDefaultDataState(statusText) {
+        team.forEach(name => { if (!(name in votes)) votes[name] = null; });
+        finalizeDataLoad(statusText);
+    }
+
+    function finalizeDataLoad(statusText) {
+        document.getElementById('status').innerText = statusText;
+        if (!loggedInUser) checkLogin();
+        
+        if (eventDate) document.getElementById('eventDateTime').value = eventDate;
+        updatePubsDropdown();
+        updateSummaryDisplay();
+        render();
+    }
+
+    function pushData() {
+        if (!SCRIPT_URL || SCRIPT_URL.includes("VNESI_SVOJ")) return;
+        document.getElementById('status').innerText = '⏳ Shranjevanje...';
+
+        const payload = JSON.stringify({ 
+            team: team, 
+            pubs: pubs,
+            votes: votes,
+            eventDate: eventDate,
+            eventLocation: eventLocation
+        });
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: payload
+        })
+        .then(res => res.json())
+        .then(() => {
+            document.getElementById('status').innerText = '✅ Shranjeno';
+        })
+        .catch(() => {
+            document.getElementById('status').innerText = '❌ Napaka';
+        });
+    }
+
+    function updatePubsDropdown() {
+        const select = document.getElementById('eventLocationSelect');
+        select.innerHTML = '';
+        pubs.forEach(pub => {
+            const opt = document.createElement('option');
+            opt.value = pub;
+            opt.innerText = pub;
+            if (pub === eventLocation) opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
+
+    function updateSummaryDisplay() {
+        const summaryEl = document.getElementById('summaryText');
+        const formattedDate = eventDate ? eventDate.replace('T', ' ob ') : 'Ni določeno';
+        summaryEl.innerText = `${eventLocation} (${formattedDate})`;
+    }
+
+    function updateEventDetails() {
+        const input = document.getElementById('eventDateTime');
+        input.value = validateAndRoundTime(input.value);
+        eventDate = input.value;
+        eventLocation = document.getElementById('eventLocationSelect').value;
+        updateSummaryDisplay();
+        pushData();
+    }
+
+    function setVote(name, val) {
+        votes[name] = val;
+        render();
+        pushData();
+    }
+
+    function resetAllVotes() {
+        if (!confirm("Res želiš ponastaviti statuse vseh oseb na 'Ni glasoval'?")) return;
+        team.forEach(name => {
+            votes[name] = null;
+        });
+        render();
+        pushData();
+        alert("Vsi glasovi so ponastavljeni!");
+    }
+
+    function resetSingleVote(name) {
+        votes[name] = null;
+        render();
+        if(document.getElementById('settingsView').style.display === 'block') {
+            renderAdminData();
+        }
+        pushData();
+    }
+
+    function render() {
+        const cardsContainer = document.getElementById('cards');
+        cardsContainer.innerHTML = '';
+        
+        team.forEach(name => {
+            const voteState = votes[name];
+            
+            let badgeHtml = '';
+            if (voteState === true) badgeHtml = `<span class="badge badge-yes">🍻 Pridem</span>`;
+            else if (voteState === false) badgeHtml = `<span class="badge badge-no">❌ Ne pridem</span>`;
+            else badgeHtml = `<span class="badge badge-none">⏳ Ni glasoval</span>`;
+
+            const card = document.createElement('div');
+            card.className = `info-card ${voteState === true ? 'attending' : (voteState === false ? 'not-attending' : '')}`;
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-name">${name}</span>
+                    <div>${badgeHtml}</div>
+                </div>
+                <div class="card-actions-row">
+                    <button class="vote-btn ${voteState === true ? 'yes-active' : ''}" onclick="setVote('${name}', true)">Pridem</button>
+                    <button class="vote-btn ${voteState === false ? 'no-active' : ''}" onclick="setVote('${name}', false)">Ne pridem</button>
+                </div>
+            `;
+            cardsContainer.appendChild(card);
+        });
+    }
+
+    function createNewEventAndNotify() {
+        updateEventDetails();
+        if (!WEBHOOK) {
+            alert("Webhook URL ni nastavljen v nastavitvah!");
+            return;
+        }
+        
+        const text = `🍻 **NOV TERMIN PIJAČE** 🍻\n\n📅 **Termin:** ${eventDate ? eventDate.replace('T', ' ob ') : 'Nedoločen'}\n📍 **Lokacija:** ${eventLocation}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+        sendWebhookMessage(text, "Dogodka ustvarjen in vabilo poslano v Teams!");
+    }
+
+    function triggerTeamsNotification() {
+        if (!WEBHOOK) {
+            alert("Webhook URL ni nastavljen v nastavitvah!");
+            return;
+        }
+        
+        const text = `🍻 **OPOMNIK ZA PIJAČO** 🍻\n\n📅 **Termin:** ${eventDate ? eventDate.replace('T', ' ob ') : 'Nedoločen'}\n📍 **Lokacija:** ${eventLocation}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+        sendWebhookMessage(text, "Opomnik poslan v Teams!");
+    }
+
+    function triggerFinalDecision(confirmed) {
+        if (!WEBHOOK) {
+            alert("Webhook URL ni nastavljen v nastavitvah!");
+            return;
+        }
+
+        let text = "";
+        if (confirmed) {
+            let attending = team.filter(n => votes[n] === true).join(", ");
+            text = `🍻 **Danes gremo na pijačo!** 🍻\n\nDobimo se v **${eventLocation}** ob **${eventDate ? eventDate.replace('T', ' ob ') : 'nedoločenem času'}**!\n\nPrijavljeni (${team.filter(n => votes[n] === true).length}): ${attending || 'Nihče'}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+        } else {
+            text = `🔴 **Pijača danes odpade!** 🔴\n\nŽal se nismo zbrali v zadostnem številu. Se vidimo drugič!\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+        }
+        sendWebhookMessage(text, "Odločitev poslana v Teams!");
+    }
+
+    function sendWebhookMessage(text, successMsg = "Uspešno poslano v Teams!") {
+        const payload = {
+            "type": "message",
+            "attachments": [{
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                    "type": "AdaptiveCard",
+                    "version": "1.2",
+                    "body": [{ "type": "TextBlock", "text": text, "wrap": true }]
+                }
+            }]
+        };
+
+        fetch(WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+            .then(() => alert(successMsg))
+            .catch(() => alert("Napaka pri pošiljanju v Teams."));
+    }
+
+    function openModal() {
+        document.getElementById('modalOverlay').style.display = 'flex';
+        document.getElementById('authView').style.display = 'block';
+        document.getElementById('settingsView').style.display = 'none';
+        document.getElementById('passInput').value = '';
+        document.getElementById('authError').style.display = 'none';
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    }
+
+    function handlePasswordKey(e) { if (e.key === 'Enter') checkPassword(); }
+
+    function checkPassword() {
+        if (document.getElementById('passInput').value === '1995') {
+            document.getElementById('authView').style.display = 'none';
+            document.getElementById('settingsView').style.display = 'block';
+            
+            document.getElementById('scriptUrl').value = SCRIPT_URL;
+            document.getElementById('webhookUrl').value = WEBHOOK;
+            renderAdminData();
+        } else {
+            document.getElementById('authError').style.display = 'block';
+        }
+    }
+
+    function addPub() {
+        const input = document.getElementById('newPubName');
+        const pub = input.value.trim();
+        if (!pub || pubs.includes(pub)) return;
+        pubs.push(pub);
+        input.value = '';
+        updatePubsDropdown();
+        renderAdminData();
+        pushData();
+    }
+
+    function removePub(pub) {
+        pubs = pubs.filter(p => p !== pub);
+        updatePubsDropdown();
+        renderAdminData();
+        pushData();
+    }
+
+    function addMember() {
+        const input = document.getElementById('newMemberName');
+        const name = input.value.trim();
+        if (!name || team.includes(name)) return;
+        team.push(name);
+        votes[name] = null;
+        input.value = '';
+        render();
+        renderAdminData();
+        pushData();
+    }
+
+    function removeMember(name) {
+        team = team.filter(m => m !== name);
+        delete votes[name];
+        render();
+        renderAdminData();
+        pushData();
+    }
+
+    function moveMember(index, direction) {
+        let newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= team.length) return;
+        let temp = team[index];
+        team[index] = team[newIndex];
+        team[newIndex] = temp;
+        renderAdminData();
+        render();
+        pushData();
+    }
+
+    function renderAdminData() {
+        const pubsContainer = document.getElementById('pubsListContainer');
+        pubsContainer.innerHTML = '';
+        pubs.forEach(pub => {
+            const row = document.createElement('div');
+            row.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#f1f5f9; padding:4px 8px; border-radius:6px; font-size:11px;";
+            row.innerHTML = `<span><b>${pub}</b></span> <button style="background:none; border:none; color:red; cursor:pointer;" onclick="removePub('${pub}')">🗑️ Odstrani</button>`;
+            pubsContainer.appendChild(row);
+        });
+
+        const tbody = document.getElementById('adminTableBody');
+        tbody.innerHTML = '';
+        team.forEach((name, idx) => {
+            let voteStatusLabel = votes[name] === true ? "🟢 Pridem" : (votes[name] === false ? "🔴 Ne pridem" : "⏳ Ni glasoval");
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${name}</b><br><span style="font-size:9px; color:#64748b;">Stanje: ${voteStatusLabel}</span></td>
+                <td style="text-align: right; white-space: nowrap;">
+                    <button class="btn-3d" style="padding: 2px 6px; font-size: 10px; background:#f1f5f9;" onclick="resetSingleVote('${name}')" title="Ponastavi glas">🔄</button>
+                    <button class="btn-3d" style="padding: 2px 6px; font-size: 10px;" onclick="moveMember(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>⬆️</button>
+                    <button class="btn-3d" style="padding: 2px 6px; font-size: 10px;" onclick="moveMember(${idx}, 1)" ${idx === team.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>⬇️</button>
+                    <button style="color:red; background:none; border:none; cursor:pointer; margin-left: 4px;" onclick="removeMember('${name}')">🗑️</button>
+                </td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function saveConfig() {
+        SCRIPT_URL = document.getElementById('scriptUrl').value;
+        WEBHOOK = document.getElementById('webhookUrl').value;
+
+        localStorage.setItem('beer_SCRIPT_URL_new', SCRIPT_URL);
+        localStorage.setItem('beer_WEBHOOK_new', WEBHOOK);
+
+        alert("Shranjeno!");
+        closeModal();
+        fetchData();
+    }
+
+    fetchData();
+</script>
+
+</body>
+</html>
