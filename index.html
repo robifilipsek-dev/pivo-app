@@ -785,7 +785,7 @@
             return;
         }
         
-        const text = `🍻 **NOV TERMIN PIJAČE** 🍻\n\n📅 **Termin:** ${eventDate ? eventDate.replace('T', ' ob ') : 'Nedoločen'}\n📍 **Lokacija:** ${eventLocation}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+        const text = `🍻 **NOV TERMIN PIJAČE** 🍻\n\n📅 **Termin:** ${eventDate ? eventDate.replace('T', ' ob ') : 'Nedoločen'}\n📍 **Lokacija:** ${eventLocation}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/pivo-app/)`;
         sendWebhookMessage(text, "Dogodka ustvarjen in vabilo poslano v Teams!");
     }
 
@@ -795,7 +795,7 @@
             return;
         }
         
-        const text = `🍻 **OPOMNIK ZA PIJAČO** 🍻\n\n📅 **Termin:** ${eventDate ? eventDate.replace('T', ' ob ') : 'Nedoločen'}\n📍 **Lokacija:** ${eventLocation}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+        const text = `🍻 **OPOMNIK ZA PIJAČO** 🍻\n\n📅 **Termin:** ${eventDate ? eventDate.replace('T', ' ob ') : 'Nedoločen'}\n📍 **Lokacija:** ${eventLocation}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/pivo-app/)`;
         sendWebhookMessage(text, "Opomnik poslan v Teams!");
     }
 
@@ -808,9 +808,9 @@
         let text = "";
         if (confirmed) {
             let attending = team.filter(n => votes[n] === true).join(", ");
-            text = `🍻 **Danes gremo na pijačo!** 🍻\n\nDobimo se v **${eventLocation}** ob **${eventDate ? eventDate.replace('T', ' ob ') : 'nedoločenem času'}**!\n\nPrijavljeni (${team.filter(n => votes[n] === true).length}): ${attending || 'Nihče'}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+            text = `🍻 **Danes gremo na pijačo!** 🍻\n\nDobimo se v **${eventLocation}** ob **${eventDate ? eventDate.replace('T', ' ob ') : 'nedoločenem času'}**!\n\nPrijavljeni (${team.filter(n => votes[n] === true).length}): ${attending || 'Nihče'}\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/pivo-app/)`;
         } else {
-            text = `🔴 **Pijača danes odpade!** 🔴\n\nŽal se nismo zbrali v zadostnem številu. Se vidimo drugič!\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/gremo-na-pivo/)`;
+            text = `🔴 **Pijača danes odpade!** 🔴\n\nŽal se nismo zbrali v zadostnem številu. Se vidimo drugič!\n\n👉 [Odpri aplikacijo](https://robifilipsek-dev.github.io/pivo-app/)`;
         }
         sendWebhookMessage(text, "Odločitev poslana v Teams!");
     }
